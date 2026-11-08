@@ -82,7 +82,8 @@ def slug(job: str) -> str:
     return f"claimsdesk-{job.replace('_', '-')}"
 
 
-def push(job: str, args: str = "", gpu: bool = True, timeout: int | None = None, extra_pip: str = "") -> None:
+def push(job: str, args: str = "", gpu: bool = True, timeout: int | None = None, extra_pip: str = "",
+         kernel_sources: list[str] | None = None) -> None:
     d = BUILD / slug(job)
     shutil.rmtree(d, ignore_errors=True)
     d.mkdir(parents=True)
@@ -94,7 +95,7 @@ def push(job: str, args: str = "", gpu: bool = True, timeout: int | None = None,
         "id": f"{USER}/{slug(job)}", "title": slug(job), "code_file": "runner.py",
         "language": "python", "kernel_type": "script", "is_private": True,
         "enable_gpu": gpu, "enable_tpu": False, "enable_internet": True,
-        "dataset_sources": [SRC_DATASET, TOKEN_DATASET, f"{USER}/claimsdesk-api-keys"], "kernel_sources": [],
+        "dataset_sources": [SRC_DATASET, TOKEN_DATASET, f"{USER}/claimsdesk-api-keys"], "kernel_sources": [f"{USER}/{slug(k)}" for k in (kernel_sources or [])],
         "competition_sources": [], "model_sources": [],
     }
     if gpu:
@@ -148,6 +149,7 @@ def main() -> None:
         p.add_argument("--cpu", action="store_true")
         p.add_argument("--timeout", type=int, default=None)
         p.add_argument("--extra-pip", default="")
+        p.add_argument("--kernel-sources", nargs="*", default=[], help="job names whose outputs to mount")
     for name in ("status", "wait", "output"):
         p = sub.add_parser(name)
         p.add_argument("job")
@@ -155,9 +157,9 @@ def main() -> None:
     if a.cmd == "sync-src":
         sync_src(a.message)
     elif a.cmd == "push":
-        push(a.job, a.args, not a.cpu, a.timeout, a.extra_pip)
+        push(a.job, a.args, not a.cpu, a.timeout, a.extra_pip, a.kernel_sources)
     elif a.cmd == "run":
-        push(a.job, a.args, not a.cpu, a.timeout, a.extra_pip)
+        push(a.job, a.args, not a.cpu, a.timeout, a.extra_pip, a.kernel_sources)
         time.sleep(30)
         print(wait(a.job))
         print("output ->", output(a.job))
