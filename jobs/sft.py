@@ -14,6 +14,10 @@ template, which Tiny Aya's template drops).
 
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")  # single-GPU SFT (avoid DataParallel wrapping)
+
 import argparse
 import glob
 import json
@@ -150,6 +154,8 @@ def main() -> None:
         fp32 logits for a 3k-token conversation ~4 GB, which OOMs a T4."""
 
         def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
+            while hasattr(model, "module"):
+                model = model.module
             inner = model.get_base_model()
             h = inner.model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]).last_hidden_state
             labels = inputs["labels"][:, 1:]
