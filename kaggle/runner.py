@@ -82,7 +82,8 @@ env.update(PYTHONUNBUFFERED="1", CLAIMSDESK_OUT=OUT, TOKENIZERS_PARALLELISM="fal
            VLLM_LOGGING_LEVEL="WARNING",
            # T4 (sm_75): FlashInfer's JIT sampling kernel fails to build -> use PyTorch sampler
            VLLM_USE_FLASHINFER_SAMPLER="0",
-           VLLM_ATTENTION_BACKEND="TRITON_ATTN")
+           VLLM_ATTENTION_BACKEND="TRITON_ATTN",
+           PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True")
 rc = sh(f"cd {SRC} && {PY} jobs/{JOB}.py {ARGS if ARGS != '__ARGS__' else ''}", check=False, env=env)
 log(f"job {JOB} finished rc={rc}")
 shutil.rmtree(VENV, ignore_errors=True)  # keep /kaggle/working output small

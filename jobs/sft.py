@@ -145,6 +145,25 @@ def main() -> None:
                 "labels": torch.tensor([b["labels"] + [-100] * (n - len(b["labels"])) for b in batch]),
                 "attention_mask": torch.tensor([[1] * len(b["input_ids"]) + [0] * (n - len(b["input_ids"])) for b in batch])}
 
+    class AssistantOnlyTrainer(Trainer):
+        """Apply lm_head only to supervised positions: Tiny Aya's 262k vocab makes full
+        fp32 logits for a 3k-token conversation ~4 GB, which OOMs a T4."""
+
+        def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
+            inner = model.get_base_model()
+            h = inner.model(input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]).last_hidden_state
+            labels = inputs["labels"][:, 1:]
+            sel = labels != -100
+            hs = h[:, :-1][sel]
+            logits = inner.lm_head(hs)
+            scale = getattr(inner, "logit_scale", None)
+            if scale is not None:
+                logits = logits * scale
+            loss = torch.nn.functional.cross_entropy(logits.float(), labels[sel], reduction="sum")
+            denom = num_items_in_batch if num_items_in_batch is not None else sel.sum()
+            loss = loss / denom
+            return (loss, None) if return_outputs else loss
+
     out_dir = str(OUT / "sft" / "adapter")
     holder: dict = {}
 
@@ -167,7 +186,7 @@ def main() -> None:
                                  learning_rate=a.lr, lr_scheduler_type="cosine", warmup_steps=10,
                                  fp16=True, max_grad_norm=1.0, logging_steps=10, save_strategy="no",
                                  report_to=[], seed=a.seed, remove_unused_columns=False)
-        return Trainer(model=m, args=args, train_dataset=data, data_collator=collate)
+        return AssistantOnlyTrainer(model=m, args=args, train_dataset=data, data_collator=collate)
 
     trainer = create_distill_trainer(a.model, demonstrations=[("warmup", "ANSWER: 0")],
                                      trainer_factory=factory, output_dir=out_dir)
