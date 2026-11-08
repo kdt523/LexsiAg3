@@ -1,0 +1,153 @@
+{
+  "generator_version": "0.1.0",
+  "splits": {
+    "train": {
+      "file": "train.jsonl",
+      "n_tasks": 4200,
+      "worlds": [
+        10000,
+        10699
+      ],
+      "schema_variant": "S",
+      "sha256": "77709947a49d285478a609a2eb55963a581b736c6f93a8d4e26e175d3dd81308",
+      "by_type": {
+        "analytics": 1400,
+        "policy": 1400,
+        "workflow": 1400
+      },
+      "by_template": {
+        "budget_remaining": 267,
+        "hotel_limit_direct": 216,
+        "meal_allowance": 195,
+        "process_claim": 1400,
+        "dept_month_total": 192,
+        "hotel_excess": 208,
+        "hotel_limit_city": 227,
+        "category_quarter_total": 263,
+        "meal_excess": 201,
+        "pending_count": 267,
+        "policy_scalar": 183,
+        "top_office": 249,
+        "employee_month_count": 162,
+        "hotel_limit_employee": 170
+      },
+      "by_difficulty": {
+        "1": 1082,
+        "2": 1006,
+        "3": 1021,
+        "4": 1091
+      }
+    },
+    "val": {
+      "file": "val.jsonl",
+      "n_tasks": 300,
+      "worlds": [
+        30000,
+        30049
+      ],
+      "schema_variant": "S",
+      "sha256": "da5424b4c747a1fff3d14d330c5d8446845ad69a2df7a64c51e95d7b04eba7f8",
+      "by_type": {
+        "analytics": 100,
+        "policy": 100,
+        "workflow": 100
+      },
+      "by_template": {
+        "category_quarter_total": 16,
+        "pending_count": 16,
+        "meal_allowance": 22,
+        "hotel_limit_city": 8,
+        "process_claim": 100,
+        "top_office": 24,
+        "hotel_excess": 16,
+        "dept_month_total": 14,
+        "hotel_limit_direct": 18,
+        "budget_remaining": 15,
+        "employee_month_count": 15,
+        "policy_scalar": 8,
+        "hotel_limit_employee": 20,
+        "meal_excess": 8
+      },
+      "by_difficulty": {
+        "1": 74,
+        "2": 65,
+        "3": 87,
+        "4": 74
+      }
+    },
+    "test_id": {
+      "file": "test_id.jsonl",
+      "n_tasks": 450,
+      "worlds": [
+        50000,
+        50149
+      ],
+      "schema_variant": "S",
+      "sha256": "50d9f184700f23f662923f9360ae4b648afd0583e7d95b728fd6a39bd538eb2a",
+      "by_type": {
+        "analytics": 150,
+        "policy": 150,
+        "workflow": 150
+      },
+      "by_template": {
+        "category_quarter_total": 38,
+        "hotel_excess": 21,
+        "process_claim": 150,
+        "top_office": 21,
+        "hotel_limit_employee": 18,
+        "pending_count": 26,
+        "meal_excess": 25,
+        "hotel_limit_direct": 16,
+        "employee_month_count": 24,
+        "hotel_limit_city": 27,
+        "meal_allowance": 21,
+        "policy_scalar": 22,
+        "budget_remaining": 15,
+        "dept_month_total": 26
+      },
+      "by_difficulty": {
+        "1": 106,
+        "2": 119,
+        "3": 120,
+        "4": 105
+      }
+    },
+    "test_ood": {
+      "file": "test_ood.jsonl",
+      "n_tasks": 180,
+      "worlds": [
+        70000,
+        70059
+      ],
+      "schema_variant": "O",
+      "sha256": "c92a3a87ac3f623908059b4caab53fc78978ab21d2b58844c6bb1933fc321b66",
+      "by_type": {
+        "analytics": 60,
+        "policy": 60,
+        "workflow": 60
+      },
+      "by_template": {
+        "pending_count": 12,
+        "policy_scalar": 11,
+        "process_claim": 60,
+        "dept_month_total": 10,
+        "meal_excess": 13,
+        "top_office": 12,
+        "hotel_excess": 9,
+        "budget_remaining": 10,
+        "employee_month_count": 7,
+        "hotel_limit_city": 8,
+        "meal_allowance": 6,
+        "hotel_limit_employee": 8,
+        "category_quarter_total": 9,
+        "hotel_limit_direct": 5
+      },
+      "by_difficulty": {
+        "1": 44,
+        "2": 42,
+        "3": 49,
+        "4": 45
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+kaggle/build/
+runs/
+*.env
+api_keys*
+hf_token*

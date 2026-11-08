@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claimsdesk"
+version = "0.1.0"
+description = "Claims & Spend Desk: a verifiable multi-tool environment + pipeline for agentic fine-tuning of Tiny Aya with AgentTune and AuditKIT"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []  # the environment core is stdlib-only
+
+[project.optional-dependencies]
+eval = ["auditkit>=1.1.6"]
+dev = ["pytest>=8"]
+# Training extras are installed from source on the GPU box (see notebooks/):
+#   pip install "agenttune[vllm] @ git+https://github.com/Lexsi-Labs/AgentTune.git"
+
+[tool.setuptools.packages.find]
+include = ["claimsdesk*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
