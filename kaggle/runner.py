@@ -72,6 +72,8 @@ sh(f"uv venv {VENV} --python 3.12 --seed -q")
 sh(f'uv pip install --python {PY} -q "agenttune[vllm] @ git+https://github.com/Lexsi-Labs/AgentTune.git@{AGENTTUNE_REF}" '
    f'"auditkit==1.1.6" pytest {EXTRA_PIP if EXTRA_PIP != "__EXTRA_PIP__" else ""}')
 sh(f"uv pip install --python {PY} -q -e {SRC}")
+# T4 (sm_75): FlashInfer JIT kernels fail to build; remove it so vLLM uses Triton attention
+sh(f"uv pip uninstall --python {PY} flashinfer-python flashinfer-cubin flashinfer-jit-cache", check=False)
 log("environment ready")
 
 # 4. run the job
@@ -79,7 +81,8 @@ env = os.environ.copy()
 env.update(PYTHONUNBUFFERED="1", CLAIMSDESK_OUT=OUT, TOKENIZERS_PARALLELISM="false",
            VLLM_LOGGING_LEVEL="WARNING",
            # T4 (sm_75): FlashInfer's JIT sampling kernel fails to build -> use PyTorch sampler
-           VLLM_USE_FLASHINFER_SAMPLER="0")
+           VLLM_USE_FLASHINFER_SAMPLER="0",
+           VLLM_ATTENTION_BACKEND="TRITON_ATTN")
 rc = sh(f"cd {SRC} && {PY} jobs/{JOB}.py {ARGS if ARGS != '__ARGS__' else ''}", check=False, env=env)
 log(f"job {JOB} finished rc={rc}")
 shutil.rmtree(VENV, ignore_errors=True)  # keep /kaggle/working output small
