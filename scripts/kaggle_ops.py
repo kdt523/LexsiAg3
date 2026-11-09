@@ -133,7 +133,8 @@ def output(job: str) -> Path:
     d = RUNS / job
     shutil.rmtree(d, ignore_errors=True)
     d.mkdir(parents=True)
-    kaggle("kernels", "output", f"{USER}/{slug(job)}", "-p", str(d), check=False)
+    kaggle("kernels", "output", f"{USER}/{slug(job)}", "-p", str(d), "-q",
+           "--file-pattern", r"^(out/.*|.*\.log)$", check=False)
     return d
 
 
