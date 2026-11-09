@@ -116,6 +116,10 @@ def main() -> None:
     ap.add_argument("--hub-repo", default="")
     ap.add_argument("--eval-limit", type=int, default=None)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--extra-rows", default="", help="jsonl of {task_id, prompt, messages} to add")
+    ap.add_argument("--init-adapter", default="", help="continue training this LoRA adapter")
+    ap.add_argument("--out-name", default="sft")
+    ap.add_argument("--no-eval", action="store_true")
     a = ap.parse_args()
 
     import torch
@@ -127,7 +131,10 @@ def main() -> None:
     schemas = [RF._build_tool_schema(t) for t in TOOLS]
     fallback = TOOLS_FALLBACK_PROMPT.format(tools=json.dumps(schemas, indent=2))
     teacher_paths = sorted(glob.glob(a.teacher_glob, recursive=True))
-    rows = load_rows(teacher_paths, a.n_oracle, a.seed)
+    rows = load_rows(teacher_paths, a.n_oracle, a.seed) if a.n_oracle > 0 or teacher_paths else []
+    if a.extra_rows:
+        rows += [json.loads(l) for l in open(a.extra_rows, encoding="utf-8")]
+        random.Random(a.seed).shuffle(rows)
     data, dropped = [], 0
     for r in rows:
         enc = encode(tok, to_conversation(r["prompt"], r["messages"], fallback), a.max_len)
@@ -139,8 +146,8 @@ def main() -> None:
              "teacher_rows": sum(r["source"] == "teacher" for r in rows),
              "mean_tokens": sum(len(d["input_ids"]) for d in data) / max(1, len(data))}
     print(json.dumps(stats, indent=2), flush=True)
-    (OUT / "sft").mkdir(parents=True, exist_ok=True)
-    (OUT / "sft" / "data_stats.json").write_text(json.dumps(stats, indent=2))
+    (OUT / a.out_name).mkdir(parents=True, exist_ok=True)
+    (OUT / a.out_name / "data_stats.json").write_text(json.dumps(stats, indent=2))
 
     def collate(batch):
         n = max(len(b["input_ids"]) for b in batch)
@@ -170,7 +177,7 @@ def main() -> None:
             loss = loss / denom
             return (loss, None) if return_outputs else loss
 
-    out_dir = str(OUT / "sft" / "adapter")
+    out_dir = str(OUT / a.out_name / "adapter")
     holder: dict = {}
 
     def factory(*, model, train_dataset=None, **kwargs):
@@ -180,14 +187,18 @@ def main() -> None:
         m = AutoModelForCausalLM.from_pretrained(model, dtype=torch.float16, device_map={"": 0})
         m.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
         m.enable_input_require_grads()
-        m = get_peft_model(m, LoraConfig(r=a.lora_r, lora_alpha=2 * a.lora_r, lora_dropout=0.05,
+        if a.init_adapter:
+            from peft import PeftModel
+            m = PeftModel.from_pretrained(m, a.init_adapter, is_trainable=True)
+        else:
+          m = get_peft_model(m, LoraConfig(r=a.lora_r, lora_alpha=2 * a.lora_r, lora_dropout=0.05,
                                          target_modules="all-linear", task_type="CAUSAL_LM"))
         for n_, p_ in m.named_parameters():  # fp32 trainable params for stable fp16 AMP on T4
             if p_.requires_grad:
                 p_.data = p_.data.float()
         m.print_trainable_parameters()
         holder["model"] = m
-        args = TrainingArguments(output_dir=str(OUT / "sft" / "ckpt"), per_device_train_batch_size=1,
+        args = TrainingArguments(output_dir=str(OUT / a.out_name / "ckpt"), per_device_train_batch_size=1,
                                  gradient_accumulation_steps=a.grad_accum, num_train_epochs=a.epochs,
                                  learning_rate=a.lr, lr_scheduler_type="cosine", warmup_steps=10,
                                  fp16=True, max_grad_norm=1.0, logging_steps=10, save_strategy="no",
@@ -198,7 +209,7 @@ def main() -> None:
                                      trainer_factory=factory, output_dir=out_dir)
     result = trainer.train()
     print("train result:", result, flush=True)
-    (OUT / "sft" / "train_result.json").write_text(json.dumps(getattr(result, "metrics", {}) or {}, default=str))
+    (OUT / a.out_name / "train_result.json").write_text(json.dumps(getattr(result, "metrics", {}) or {}, default=str))
     holder["model"].save_pretrained(out_dir)
     tok.save_pretrained(out_dir)
     if a.hub_repo:
@@ -210,6 +221,8 @@ def main() -> None:
 
     del holder["model"]
     torch.cuda.empty_cache()
+    if a.no_eval:
+        return
     cmd = [sys.executable, str(ROOT / "jobs" / "eval.py"), "--model", a.model, "--adapter", out_dir,
            "--label", "tiny_aya_global_sft", "--prompt", "full"]
     if a.eval_limit:

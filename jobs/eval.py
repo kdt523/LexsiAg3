@@ -55,7 +55,7 @@ def load_split(name: str, limit: int | None) -> list[Task]:
 
 
 def run_split(llm, tok, tasks: list[Task], system_prompt: str, max_steps: int, max_tokens: int,
-              max_model_len: int, lora=None) -> list[Ep]:
+              max_model_len: int, lora=None, temperature: float = 0.0, seed: int = 0) -> list[Ep]:
     from agenttune.agentic.rollout_engines import rollout_factory as RF
     from agenttune.agentic.trajectory.dataset import Step
     from vllm import SamplingParams
@@ -73,7 +73,8 @@ def run_split(llm, tok, tasks: list[Task], system_prompt: str, max_steps: int, m
             conv[0] = {**conv[0], "content": f"{conv[0]['content']}\n\n{fallback}"}
         eps.append(Ep(t, conv))
 
-    sp = SamplingParams(max_tokens=max_tokens, temperature=0.0, skip_special_tokens=False)
+    sp = SamplingParams(max_tokens=max_tokens, temperature=temperature, top_p=1.0 if temperature == 0 else 0.95,
+                        seed=seed, skip_special_tokens=False)
     for turn in range(max_steps + 1):
         active = [e for e in eps if not e.done]
         if not active:
