@@ -190,7 +190,11 @@ def main() -> None:
     if a.adapter:
         from vllm.lora.request import LoRARequest
         kw.update(enable_lora=True, max_lora_rank=64)
-        lora = LoRARequest(a.label, 1, a.adapter)
+        path = a.adapter
+        if not Path(path).exists():  # HF repo id -> local snapshot
+            from huggingface_hub import snapshot_download
+            path = snapshot_download(path)
+        lora = LoRARequest(a.label, 1, path)
     llm = LLM(**kw)
     system_prompt = SYSTEM_PROMPT if a.prompt == "full" else MINIMAL_SYSTEM_PROMPT
     for split in a.splits:
