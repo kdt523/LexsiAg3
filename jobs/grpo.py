@@ -99,7 +99,7 @@ def main() -> None:
     tasks = [Task.from_dict(json.loads(l)) for l in open(ROOT / "data" / "train.jsonl", encoding="utf-8")]
     rng = random.Random(a.seed)
     rng.shuffle(tasks)
-    want = {"workflow": int(a.n_prompts * 0.45), "policy": int(a.n_prompts * 0.35), "analytics": int(a.n_prompts * 0.2)}
+    want = {"workflow": int(a.n_prompts * 0.7), "policy": int(a.n_prompts * 0.2), "analytics": int(a.n_prompts * 0.1)}
     picked = []
     for t in reversed(tasks):  # take from the end: disjoint from the SFT oracle sample (taken from the front)
         if want[t.task_type] > 0:
