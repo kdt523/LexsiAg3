@@ -1,0 +1,250 @@
+{
+  "meta": {
+    "label": "tiny_aya_global_sft",
+    "model": "CohereLabs/tiny-aya-global",
+    "adapter": "kd1609/claimsdesk-tiny-aya-global-sft-lora",
+    "split": "test_id",
+    "prompt": "full",
+    "n_tasks": 450,
+    "wall_secs": 2159.0,
+    "decoding": "greedy",
+    "max_steps": 12
+  },
+  "n": 450,
+  "metrics": {
+    "task_success": {
+      "mean": 0.8133333333333334,
+      "lo": 0.78,
+      "hi": 0.8466666666666667,
+      "n": 450
+    },
+    "grounded_success": {
+      "mean": 0.8066666666666666,
+      "lo": 0.7733333333333333,
+      "hi": 0.8422222222222222,
+      "n": 450
+    },
+    "no_answer_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 450
+    },
+    "malformed_call_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 450
+    },
+    "invalid_call_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 450
+    },
+    "redundant_call_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 450
+    },
+    "calls_per_task": {
+      "mean": 3.466666666666667,
+      "lo": 3.3044444444444445,
+      "hi": 3.6333333333333333,
+      "n": 450
+    },
+    "turns_per_task": {
+      "mean": 4.466666666666667,
+      "lo": 4.304444444444444,
+      "hi": 4.633333333333334,
+      "n": 450
+    },
+    "over_budget_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 450
+    },
+    "unnecessary_retrieval_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 150
+    },
+    "missed_retrieval_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 300
+    },
+    "gold_evidence_recall": {
+      "mean": 0.5,
+      "lo": 0.44333333333333336,
+      "hi": 0.5533333333333333,
+      "n": 300
+    },
+    "distractor_fooled_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 150
+    },
+    "citation_accuracy": {
+      "mean": 0.5466666666666666,
+      "lo": 0.46,
+      "hi": 0.62,
+      "n": 150
+    },
+    "unsafe_approval_rate": {
+      "mean": 0.02666666666666667,
+      "lo": 0.006666666666666667,
+      "hi": 0.05333333333333334,
+      "n": 150
+    },
+    "over_escalation_rate": {
+      "mean": 0.0,
+      "lo": 0.0,
+      "hi": 0.0,
+      "n": 150
+    },
+    "evidence_before_decision": {
+      "mean": 0.7466666666666667,
+      "lo": 0.68,
+      "hi": 0.8133333333333334,
+      "n": 150
+    }
+  },
+  "by_type": {
+    "analytics": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 150
+    },
+    "policy": {
+      "mean": 0.9933333333333333,
+      "lo": 0.98,
+      "hi": 1.0,
+      "n": 150
+    },
+    "workflow": {
+      "mean": 0.44666666666666666,
+      "lo": 0.36666666666666664,
+      "hi": 0.5266666666666666,
+      "n": 150
+    }
+  },
+  "by_difficulty": {
+    "1": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 106
+    },
+    "2": {
+      "mean": 0.7478991596638656,
+      "lo": 0.6722689075630253,
+      "hi": 0.8151260504201681,
+      "n": 119
+    },
+    "3": {
+      "mean": 0.9833333333333333,
+      "lo": 0.9583333333333334,
+      "hi": 1.0,
+      "n": 120
+    },
+    "4": {
+      "mean": 0.5047619047619047,
+      "lo": 0.4095238095238095,
+      "hi": 0.5904761904761905,
+      "n": 105
+    }
+  },
+  "by_template": {
+    "budget_remaining": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 15
+    },
+    "category_quarter_total": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 38
+    },
+    "dept_month_total": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 26
+    },
+    "employee_month_count": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 24
+    },
+    "hotel_excess": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 21
+    },
+    "hotel_limit_city": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 27
+    },
+    "hotel_limit_direct": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 16
+    },
+    "hotel_limit_employee": {
+      "mean": 0.9444444444444444,
+      "lo": 0.8333333333333334,
+      "hi": 1.0,
+      "n": 18
+    },
+    "meal_allowance": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 21
+    },
+    "meal_excess": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 25
+    },
+    "pending_count": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 26
+    },
+    "policy_scalar": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 22
+    },
+    "process_claim": {
+      "mean": 0.44666666666666666,
+      "lo": 0.36666666666666664,
+      "hi": 0.5266666666666666,
+      "n": 150
+    },
+    "top_office": {
+      "mean": 1.0,
+      "lo": 1.0,
+      "hi": 1.0,
+      "n": 21
+    }
+  }
+}

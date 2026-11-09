@@ -1,0 +1,19 @@
+{
+  "attempted": 220,
+  "kept": 27,
+  "by_type": {
+    "policy": [
+      86,
+      15
+    ],
+    "workflow": [
+      109,
+      7
+    ],
+    "analytics": [
+      25,
+      5
+    ]
+  },
+  "api_calls": 888
+}

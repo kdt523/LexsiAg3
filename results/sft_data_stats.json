@@ -1,0 +1,10 @@
+{
+  "teacher_files": [
+    "/kaggle/input/notebooks/krushnad523/claimsdesk-teacher/out/teacher/teacher_verified.jsonl"
+  ],
+  "rows": 2027,
+  "encoded": 1866,
+  "dropped": 161,
+  "teacher_rows": 27,
+  "mean_tokens": 2973.750803858521
+}
