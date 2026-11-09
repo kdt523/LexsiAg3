@@ -188,13 +188,16 @@ def main() -> None:
               tensor_parallel_size=a.tp, seed=0)
     lora = None
     if a.adapter:
-        from vllm.lora.request import LoRARequest
-        kw.update(enable_lora=True, max_lora_rank=64)
-        path = a.adapter
-        if not Path(path).exists():  # HF repo id -> local snapshot
-            from huggingface_hub import snapshot_download
-            path = snapshot_download(path)
-        lora = LoRARequest(a.label, 1, path)
+        # vLLM's LoRA path crashes on Cohere's tied embeddings -> merge on CPU, serve merged weights
+        import torch
+        from peft import PeftModel
+        from transformers import AutoModelForCausalLM
+        merged = Path("/kaggle/working/merged_eval") if Path("/kaggle/working").exists() else OUT / "merged_eval"
+        base = AutoModelForCausalLM.from_pretrained(a.model, dtype=torch.float16, device_map={"": "cpu"})
+        PeftModel.from_pretrained(base, a.adapter).merge_and_unload().save_pretrained(merged)
+        tok.save_pretrained(merged)
+        del base
+        kw["model"] = str(merged)
     llm = LLM(**kw)
     system_prompt = SYSTEM_PROMPT if a.prompt == "full" else MINIMAL_SYSTEM_PROMPT
     for split in a.splits:
