@@ -9,6 +9,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SFT = "kd1609/claimsdesk-tiny-aya-global-sft-lora"
 ROUNDS = {
+    "sft": [
+        ["--model", "CohereLabs/tiny-aya-global", "--adapter", SFT, "--label", "tiny_aya_global_sft", "--prompt", "full"],
+    ],
     "round2": [
         ["--model", "CohereLabs/tiny-aya-global", "--adapter", SFT, "--label", "tiny_aya_global_sft", "--prompt", "full"],
         ["--model", "CohereLabs/tiny-aya-global", "--label", "tiny_aya_global_prompted", "--prompt", "full",
