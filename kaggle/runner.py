@@ -89,4 +89,6 @@ log(f"job {JOB} finished rc={rc}")
 shutil.rmtree(VENV, ignore_errors=True)  # keep /kaggle/working output small
 shutil.rmtree(os.path.join(WORK, "src_unzip"), ignore_errors=True)
 shutil.rmtree(SRC, ignore_errors=True)
+for big in ("merged_eval", "sft_merged"):  # merged weights live on HF, keep outputs small
+    shutil.rmtree(os.path.join(WORK, big), ignore_errors=True)
 sys.exit(rc)
