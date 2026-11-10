@@ -193,13 +193,16 @@ def main() -> None:
         import torch
         from peft import PeftModel
         from transformers import AutoModelForCausalLM
-        merged = Path("/kaggle/working/merged_eval") if Path("/kaggle/working").exists() else OUT / "merged_eval"
+        merged = Path("/tmp/merged_eval") if Path("/kaggle/working").exists() else OUT / "merged_eval"
         base = AutoModelForCausalLM.from_pretrained(a.model, dtype=torch.float16, device_map={"": "cpu"})
         PeftModel.from_pretrained(base, a.adapter).merge_and_unload().save_pretrained(merged)
         tok.save_pretrained(merged)
         del base
         kw["model"] = str(merged)
     llm = LLM(**kw)
+    if a.adapter:  # weights are now in GPU memory; free the disk
+        import shutil
+        shutil.rmtree(kw["model"], ignore_errors=True)
     system_prompt = SYSTEM_PROMPT if a.prompt == "full" else MINIMAL_SYSTEM_PROMPT
     for split in a.splits:
         tasks = load_split(split, a.limit)
