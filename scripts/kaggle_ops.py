@@ -27,7 +27,7 @@ RUNS = ROOT / "runs"
 USER = os.environ.get("KAGGLE_USER", "krushnadatir523")
 SRC_DATASET = f"{USER}/claimsdesk-src"
 TOKEN_DATASET = f"{USER}/hf-token"
-SRC_ITEMS = ["claimsdesk", "jobs", "tests", "data", "pyproject.toml", "README.md"]
+SRC_ITEMS = ["claimsdesk", "jobs", "space", "tests", "data", "pyproject.toml", "README.md"]
 
 
 def kaggle(*args: str, check: bool = True, capture: bool = False) -> subprocess.CompletedProcess:
