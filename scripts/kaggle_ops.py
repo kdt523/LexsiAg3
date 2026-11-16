@@ -24,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "kaggle" / "build"
 RUNS = ROOT / "runs"
-USER = os.environ.get("KAGGLE_USER", "krushnad523")
+USER = os.environ.get("KAGGLE_USER", "krushnadatir523")
 SRC_DATASET = f"{USER}/claimsdesk-src"
 TOKEN_DATASET = f"{USER}/hf-token"
 SRC_ITEMS = ["claimsdesk", "jobs", "tests", "data", "pyproject.toml", "README.md"]
@@ -95,7 +95,7 @@ def push(job: str, args: str = "", gpu: bool = True, timeout: int | None = None,
         "id": f"{USER}/{slug(job)}", "title": slug(job), "code_file": "runner.py",
         "language": "python", "kernel_type": "script", "is_private": True,
         "enable_gpu": gpu, "enable_tpu": False, "enable_internet": True,
-        "dataset_sources": [SRC_DATASET, TOKEN_DATASET, f"{USER}/claimsdesk-api-keys"], "kernel_sources": [f"{USER}/{slug(k)}" for k in (kernel_sources or [])],
+        "dataset_sources": [SRC_DATASET, TOKEN_DATASET] + [f"{USER}/{d}" for d in os.environ.get("EXTRA_DATASETS", "").split(",") if d], "kernel_sources": [f"{USER}/{slug(k)}" for k in (kernel_sources or [])],
         "competition_sources": [], "model_sources": [],
     }
     if gpu:

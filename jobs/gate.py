@@ -28,7 +28,7 @@ def metrics(label, split):
     return json.loads((OUT / label / split / "summary.json").read_text())["metrics"]
 
 
-cand = sorted(glob.glob("/kaggle/input/**/heal/adapter/adapter_config.json", recursive=True))
+cand = sorted(glob.glob("/kaggle/input/**/claimsdesk-healed-adapter/**/adapter_config.json", recursive=True))
 if not cand:
     raise SystemExit("healed adapter not mounted")
 adapter = str(Path(cand[0]).parent)
