@@ -1,0 +1,58 @@
+{
+  "tiny_aya_global_minimal/test_id": {
+    "n": 450,
+    "outcome_success": 0.022222222222222223,
+    "tool_call_validity": 0.9902,
+    "redundant_tool_calls": 0.4312,
+    "agent_loop_detection": 0.1542,
+    "mean_tool_calls": 9.444
+  },
+  "tiny_aya_global_minimal/test_ood": {
+    "n": 180,
+    "outcome_success": 0.005555555555555556,
+    "tool_call_validity": 0.9976,
+    "redundant_tool_calls": 0.3585,
+    "agent_loop_detection": 0.1494,
+    "mean_tool_calls": 9.294
+  },
+  "tiny_aya_global_prompted/test_id": {
+    "n": 450,
+    "outcome_success": 0.03111111111111111,
+    "tool_call_validity": 1.0,
+    "redundant_tool_calls": 0.4379,
+    "agent_loop_detection": 0.2935,
+    "mean_tool_calls": 9.4
+  },
+  "tiny_aya_global_sft/test_id": {
+    "n": 450,
+    "outcome_success": 0.8066666666666666,
+    "tool_call_validity": 1.0,
+    "redundant_tool_calls": 0.0,
+    "agent_loop_detection": 1.0,
+    "mean_tool_calls": 3.467
+  },
+  "tiny_aya_global_sft/test_ood": {
+    "n": 180,
+    "outcome_success": 0.38333333333333336,
+    "tool_call_validity": 1.0,
+    "redundant_tool_calls": 0.0814,
+    "agent_loop_detection": 0.6222,
+    "mean_tool_calls": 4.4
+  },
+  "gate_sft/val": {
+    "n": 300,
+    "outcome_success": 0.78,
+    "tool_call_validity": 1.0,
+    "redundant_tool_calls": 0.0,
+    "agent_loop_detection": 1.0,
+    "mean_tool_calls": 3.487
+  },
+  "gate_candidate/val": {
+    "n": 300,
+    "outcome_success": 0.8,
+    "tool_call_validity": 1.0,
+    "redundant_tool_calls": 0.0,
+    "agent_loop_detection": 1.0,
+    "mean_tool_calls": 3.487
+  }
+}
